@@ -8,7 +8,7 @@ Fernet.generate_key()
 '''
 
 
-class ShipayEncryptDecrypt():
+class ServiceEncryptDecrypt():
 
     def __init__(self):
         key = self.get_secret_key()
