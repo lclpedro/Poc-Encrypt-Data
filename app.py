@@ -2,12 +2,12 @@ from flask import Flask, jsonify, request
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy_utils import EncryptedType
 from cryptography.fernet import Fernet
-from utils import ShipayEncryptDecrypt
+from utils import ServiceEncryptDecrypt
 
 app = Flask(__name__)
 db = SQLAlchemy(app)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:////tmp/shipaypoc.db'
-secret_key = 'shipaypoctest'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:////tmp/databasepoc.db'
+secret_key = 'servicepoctest'
 
 
 class Person(db.Model):
@@ -16,21 +16,21 @@ class Person(db.Model):
     email = db.Column(db.String(), unique=True, nullable=False)
 
     def __init__(self, **kwargs):
-        shipayencdec = ShipayEncryptDecrypt()
-        self.username = shipayencdec.encrypt(kwargs['username'])
-        self.email = shipayencdec.encrypt(kwargs['email'])
+        serviceencdec = ServiceEncryptDecrypt()
+        self.username = serviceencdec.encrypt(kwargs['username'])
+        self.email = serviceencdec.encrypt(kwargs['email'])
 
     def __repr__(self):
         return '<Person %r>' % self.username
 
     @property
     def to_dict(self):
-        shipayencdec = ShipayEncryptDecrypt()
+        serviceencdec = ServiceEncryptDecrypt()
 
         return dict(
             id=self.id,
-            username=shipayencdec.decrypt(self.username),
-            email=shipayencdec.decrypt(self.email)
+            username=serviceencdec.decrypt(self.username),
+            email=serviceencdec.decrypt(self.email)
         )
 
 
